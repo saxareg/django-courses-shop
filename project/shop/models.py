@@ -18,6 +18,8 @@ class Category(models.Model):
 
 # main class
 
+# основная сущность
+
 
 class Course(models.Model):
     title = models.CharField(max_length=300)
