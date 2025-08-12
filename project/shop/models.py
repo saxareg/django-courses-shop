@@ -6,7 +6,7 @@ from django.utils.text import slugify
 class Category(models.Model):
     title = models.CharField(max_length=255)
     created_at = models.DateTimeField(default=timezone.now)
-    slug = models.CharField(max_length=255, unique=True)
+    slug = models.CharField(max_length=255, unique=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -28,7 +28,7 @@ class Course(models.Model):
     reviews_qty = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
-    slug = models.CharField(max_length=255, unique=True)
+    slug = models.CharField(max_length=255, unique=True, blank=True)
     image = models.ImageField(upload_to='courses/images')
 
     def save(self, *args, **kwargs):
