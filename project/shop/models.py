@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
 
+# category class
+
 
 class Category(models.Model):
     title = models.CharField(max_length=255)
