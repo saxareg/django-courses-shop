@@ -3,7 +3,19 @@
 {% block title %}All courses{% endblock %}
 
 {% block content %}
-<table class="table mt-5 table-bordered table-striped table-hover">
+<div class="d-flex justify-content-end mb-3">
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="currencyDropdown" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Currency: USD
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="currencyDropdown">
+            <li><a class="dropdown-item active" href="#">USD</a></li>
+        </ul>
+    </div>
+</div>
+
+<table class="table mt-1 table-bordered table-striped table-hover">
     <thead class="table-dark">
         <tr>
             <th>Title</th>
