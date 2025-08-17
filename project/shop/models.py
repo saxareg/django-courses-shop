@@ -35,6 +35,12 @@ class Course(models.Model):
                             blank=True, db_index=True)
     image = models.ImageField(upload_to='courses/images')
 
+    class Meta:
+        ordering = ['students_qty']
+        indexes = [
+            models.Index(fields=['students_qty'])
+        ]
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
