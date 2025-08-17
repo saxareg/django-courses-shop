@@ -11,6 +11,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ['title', 'slug', 'price', 'category', 'created_at']
     prepopulated_fields = {'slug': ('title',)}
     ordering = ['-created_at', 'title']
+    list_per_page = 10
 
 
 admin.site.register(models.Category, CategoryAdmin)
