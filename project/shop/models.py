@@ -33,7 +33,7 @@ class Course(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     slug = models.CharField(max_length=255, unique=True,
                             blank=True, db_index=True)
-    image = models.ImageField(upload_to='courses/images')
+    image = models.ImageField(upload_to='images/')
 
     class Meta:
         ordering = ['students_qty']

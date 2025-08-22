@@ -1,12 +1,55 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
+{% load static %}
 
-<head>
-    <title>filter</title>
-</head>
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/filters.css' %}">
 
-<body>
-    <h1>Hello, World!</h1>
-</body>
+<h1>FILTRATION</h1>
+<br><br>
 
-</html>
+<form action="/shop/" method="GET">
+    <!-- Фильтр по цене -->
+    <div class="filter-section">
+        <h3>Цена(USD)</h3>
+        <p>
+            <label for="min_price">Минимальная цена:</label>
+            <input type="number" id="min_price" name="min_price" min="0" step="any" placeholder="0">
+        </p>
+        <p>
+            <label for="max_price">Максимальная цена:</label>
+            <input type="number" id="max_price" name="max_price" min="0" step="any" placeholder="10000">
+        </p>
+    </div>
+
+    <!-- Фильтр по популярности/новизне -->
+    <div class="filter-section">
+        <h3>Сортировка</h3>
+        <p>
+            <input type="radio" id="popular" name="sort" value="popular" checked>
+            <label for="popular">Популярные</label>
+        </p>
+        <p>
+            <input type="radio" id="new" name="sort" value="new">
+            <label for="new">Новые</label>
+        </p>
+        <p>
+            <input type="radio" id="reviews" name="sort" value="reviews">
+            <label for="reviews">По количеству отзывов</label>
+        </p>
+    </div>
+
+    <!-- Фильтр по категориям -->
+    <div class="filter-section">
+        <h3>Категория</h3>
+        <select id="category" name="category">
+            <option value="">Все категории</option>
+            {% for cat in category %}
+            <option value="{{ cat.title }}">{{ cat.title }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <br>
+    <button type="submit">Применить фильтры</button>
+</form>
+{% endblock %}
