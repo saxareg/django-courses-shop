@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .import models
 
+# this bouth class I used for administration dask
+
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ['title', 'slug', 'created_at']
