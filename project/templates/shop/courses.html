@@ -4,8 +4,7 @@
 
 {% block content %}
 <div class="d-flex justify-content-between mb-3">
-    <a href="{% url 'shop:filter_courses' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}"
-        class="btn btn-info">
+    <a href="{% url 'shop:filter' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-info">
         Фильтры
     </a>
 

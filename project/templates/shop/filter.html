@@ -7,7 +7,7 @@
 <h1>FILTRATION</h1>
 <br><br>
 
-<form action="/shop/" method="GET">
+<form action="{% url 'shop:index' %}" method="GET">
     <!-- Фильтр по цене -->
     <div class="filter-section">
         <h3>Цена(USD)</h3>
@@ -27,17 +27,27 @@
     <div class="filter-section">
         <h3>Сортировка</h3>
         <p>
-            <input type="radio" id="popular" name="sort" value="popular" {% if current_sort=="popular" or not
-                current_sort %}checked{% endif %}>
+            {% if current_sort == "popular" %}
+            <input type="radio" id="popular" name="sort" value="popular" checked>
+            {% else %}
+            <input type="radio" id="popular" name="sort" value="popular">
+            {% endif %}
             <label for="popular">Популярные</label>
         </p>
         <p>
-            <input type="radio" id="new" name="sort" value="new" {% if current_sort=="new" %}checked{% endif %}>
+            {% if current_sort == "new" %}
+            <input type="radio" id="new" name="sort" value="new" checked>
+            {% else %}
+            <input type="radio" id="new" name="sort" value="new">
+            {% endif %}
             <label for="new">Новые</label>
         </p>
         <p>
-            <input type="radio" id="reviews" name="sort" value="reviews" {% if current_sort=="reviews" %}checked{% endif
-                %}>
+            {% if current_sort == "reviews" %}
+            <input type="radio" id="reviews" name="sort" value="reviews" checked>
+            {% else %}
+            <input type="radio" id="reviews" name="sort" value="reviews">
+            {% endif %}
             <label for="reviews">По количеству отзывов</label>
         </p>
     </div>
@@ -48,14 +58,17 @@
         <select id="category" name="category">
             <option value="">Все категории</option>
             {% for cat in category %}
-            <option value="{{ cat.title }}" {% if current_category==cat.title %}selected{% endif %}>{{ cat.title }}
-            </option>
+            {% if current_category == cat.title %}
+            <option value="{{ cat.title }}" selected>{{ cat.title }}</option>
+            {% else %}
+            <option value="{{ cat.title }}">{{ cat.title }}</option>
+            {% endif %}
             {% endfor %}
         </select>
     </div>
 
     <br>
     <button type="submit" class="btn btn-primary">Применить фильтры</button>
-    <a href="/shop/" class="btn btn-secondary">Сбросить фильтры</a>
+    <a href="{% url 'shop:index' %}" class="btn btn-secondary">Сбросить фильтры</a>
 </form>
 {% endblock %}

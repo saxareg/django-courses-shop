@@ -7,9 +7,9 @@ def index(request):
     # Получаем параметры из URL
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
-    sort_by = request.GET.get('sort', 'popular')  # по умолчанию 'popular'
+    sort_by = request.GET.get('sort', 'popular')
     category_name = request.GET.get('category', '')
-    page_number = request.GET.get('page', 1)  # номер страницы для пагинации
+    page_number = request.GET.get('page', 1)
 
     courses = Course.objects.all()
 
@@ -28,7 +28,7 @@ def index(request):
     if category_name:
         courses = courses.filter(category__title=category_name)
 
-    # Пагинация - показываем по 10 курсов на странице
+    # Пагинация
     paginator = Paginator(courses, 10)
 
     try:
@@ -52,10 +52,9 @@ def single_course(request, my_slug):
     return render(request, 'shop/single_course.html', {'course': course})
 
 
-def filter_courses(request):
+def filter_courses(request):  # ← эта функция остается с таким именем!
     category = Category.objects.all()
 
-    # Получаем текущие значения фильтров для сохранения в форме
     current_min_price = request.GET.get('min_price', '')
     current_max_price = request.GET.get('max_price', '')
     current_sort = request.GET.get('sort', 'popular')
