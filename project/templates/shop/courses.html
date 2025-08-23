@@ -3,7 +3,12 @@
 {% block title %}All courses{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-end mb-3">
+<div class="d-flex justify-content-between mb-3">
+    <a href="{% url 'shop:filter_courses' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}"
+        class="btn btn-info">
+        Фильтры
+    </a>
+
     <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="currencyDropdown" data-bs-toggle="dropdown"
             aria-expanded="false">
@@ -41,4 +46,57 @@
         {% endfor %}
     </tbody>
 </table>
+
+<!-- Пагинация -->
+{% if courses.has_other_pages %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if courses.has_previous %}
+        <li class="page-item">
+            <a class="page-link"
+                href="?page={{ courses.previous_page_number }}{% if current_min_price %}&min_price={{ current_min_price }}{% endif %}{% if current_max_price %}&max_price={{ current_max_price }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}"
+                aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&laquo;</span>
+        </li>
+        {% endif %}
+
+        {% for i in courses.paginator.page_range %}
+        {% if courses.number == i %}
+        <li class="page-item active">
+            <span class="page-link">{{ i }}</span>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link"
+                href="?page={{ i }}{% if current_min_price %}&min_price={{ current_min_price }}{% endif %}{% if current_max_price %}&max_price={{ current_max_price }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}">{{
+                i }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if courses.has_next %}
+        <li class="page-item">
+            <a class="page-link"
+                href="?page={{ courses.next_page_number }}{% if current_min_price %}&min_price={{ current_min_price }}{% endif %}{% if current_max_price %}&max_price={{ current_max_price }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}{% if current_category %}&category={{ current_category }}{% endif %}"
+                aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&raquo;</span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+<div class="text-center mt-3">
+    <p>Showing {{ courses.start_index }} - {{ courses.end_index }} of {{ courses.paginator.count }} courses</p>
+</div>
 {% endblock %}

@@ -1,52 +1,45 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Course, Category
-
-
-# def index(request):
-#     courses = Course.objects.all()
-#     return render(request, 'shop/courses.html', {'courses': courses})
-
-
-# old method
-# def index(request):
-#     courses = Course.objects.all().order_by('-students_qty')
-#     return render(request, 'shop/courses.html', {'courses': courses})
-
-from django.shortcuts import render
 
 
 def index(request):
     # Получаем параметры из URL
-    # строка или None, если не передано
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
     sort_by = request.GET.get('sort', 'popular')  # по умолчанию 'popular'
-    category_name = request.GET.get(
-        'category', '')  # по умолчанию пустая строка
+    category_name = request.GET.get('category', '')
+    page_number = request.GET.get('page', 1)  # номер страницы для пагинации
 
     courses = Course.objects.all()
 
     if min_price:
-        courses = courses.filter(price__gte=float(
-            min_price))  # цена >= min_price
+        courses = courses.filter(price__gte=float(min_price))
     if max_price:
-        courses = courses.filter(price__lte=float(
-            max_price))  # цена <= max_price
+        courses = courses.filter(price__lte=float(max_price))
 
     if sort_by == 'new':
-        courses = courses.order_by('-created_at')  # новые сначала
+        courses = courses.order_by('-created_at')
     elif sort_by == 'reviews':
-        courses = courses.order_by('-reviews_qty')  # по отзывам
-    else:  # popular (по умолчанию)
+        courses = courses.order_by('-reviews_qty')
+    else:
         courses = courses.order_by('-students_qty')
 
     if category_name:
-        # Используем title вместо id
         courses = courses.filter(category__title=category_name)
 
+    # Пагинация - показываем по 10 курсов на странице
+    paginator = Paginator(courses, 10)
+
+    try:
+        courses_page = paginator.page(page_number)
+    except PageNotAnInteger:
+        courses_page = paginator.page(1)
+    except EmptyPage:
+        courses_page = paginator.page(paginator.num_pages)
+
     return render(request, 'shop/courses.html', {
-        'courses': courses,
+        'courses': courses_page,
         'current_min_price': min_price,
         'current_max_price': max_price,
         'current_sort': sort_by,
@@ -61,4 +54,17 @@ def single_course(request, my_slug):
 
 def filter_courses(request):
     category = Category.objects.all()
-    return render(request, 'shop/filter.html', {'category': category})
+
+    # Получаем текущие значения фильтров для сохранения в форме
+    current_min_price = request.GET.get('min_price', '')
+    current_max_price = request.GET.get('max_price', '')
+    current_sort = request.GET.get('sort', 'popular')
+    current_category = request.GET.get('category', '')
+
+    return render(request, 'shop/filter.html', {
+        'category': category,
+        'current_min_price': current_min_price,
+        'current_max_price': current_max_price,
+        'current_sort': current_sort,
+        'current_category': current_category,
+    })
