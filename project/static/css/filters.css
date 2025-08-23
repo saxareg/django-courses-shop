@@ -22,3 +22,37 @@ button {
 button:hover {
     background-color: #45a049;
 }
+
+.filter-section {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #dee2e6;
+}
+
+.filter-section h3 {
+    color: #495057;
+    margin-bottom: 15px;
+}
+
+.filter-section p {
+    margin-bottom: 10px;
+}
+
+.filter-section label {
+    margin-left: 8px;
+}
+
+.filter-section input[type="number"],
+.filter-section select {
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 200px;
+}
+
+.filter-section input[type="radio"] {
+    margin-right: 5px;
+}
