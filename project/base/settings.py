@@ -31,7 +31,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'shop.apps.ShopConfig',
-    'users.apps.UsersConfig'
+    'users.apps.UsersConfig',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -152,3 +153,13 @@ EMAIL_PORT = env('EMAIL_PORT')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = env('EMAIL_USE_TLS')
+
+
+DEFAULT_USER_IMAGE = 'images/default-avatar.png'  # или другой путь
+
+
+USERS_IMAGES_ROOT = os.path.join(BASE_DIR, 'users_images')
+USERS_IMAGES_URL = '/users_images/'
+
+# Дефолтная аватарка
+DEFAULT_USER_IMAGE = 'default_image.png'
