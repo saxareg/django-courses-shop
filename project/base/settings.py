@@ -1,10 +1,8 @@
 
-
-from django.contrib.auth.backends import ModelBackend
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-
+import environ
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -140,7 +138,17 @@ AUTHENTICATION_BACKENDS = [
     'users.authentication.EmailAuthBackend',
 ]
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
 AUTH_USER_MODEL = 'users.User'
+
+env = environ.Env()
+environ.Env.read_env(BASE_DIR / '.env')  # ← .env в корне проекта
+
+# Теперь все переменные доступны
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = env('EMAIL_USE_TLS')
