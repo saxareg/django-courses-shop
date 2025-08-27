@@ -9,5 +9,11 @@
 
 <p>Price: {{ course.price }}</p>
 <p>Students Quantity: {{ course.students_qty}}</p>
-<button class="btn btn-primary">Buy</button>
+
+{% if user.is_authenticated %}
+<a href="{% url 'shop:buy_course' course.id %}" class="btn btn-success">Купить</a>
+{% else %}
+<a href="{% url 'users:login' %}?next={% url 'shop:single_course' course.slug %}" class="btn btn-primary">Купить</a>
+{% endif %}
+
 {% endblock %}
