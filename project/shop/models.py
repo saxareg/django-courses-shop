@@ -1,8 +1,9 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
+from django.contrib.auth import get_user_model
 
-# category class
+User = get_user_model()
 
 
 class Category(models.Model):
@@ -19,10 +20,6 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
-# main class
-
-# основная сущность
-
 
 class Course(models.Model):
     title = models.CharField(max_length=300)
@@ -34,6 +31,10 @@ class Course(models.Model):
     slug = models.CharField(max_length=255, unique=True,
                             blank=True, db_index=True)
     image = models.ImageField(upload_to='images/')
+    file = models.FileField(upload_to='courses_files/',
+                            blank=True, null=True, verbose_name='Файл курса')
+    is_published = models.BooleanField(
+        default=True, verbose_name='Опубликован')
 
     class Meta:
         ordering = ['students_qty']
@@ -48,3 +49,18 @@ class Course(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Purchase(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    course = models.ForeignKey(
+        Course, on_delete=models.CASCADE, verbose_name='Курс')
+    purchased_at = models.DateTimeField(
+        auto_now_add=True, verbose_name='Дата покупки')
+
+    class Meta:
+        unique_together = ['user', 'course']
+
+    def __str__(self):
+        return f'{self.user.username} - {self.course.title}'
