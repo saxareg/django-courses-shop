@@ -6,11 +6,13 @@ from . import views
 app_name = "users"
 
 urlpatterns = [
-    path('login/', views.LoginUser.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
+    path('login/', views.LoginUser.as_view(template_name="users/login.html"), name='login'),
+    path('logout/', LogoutView.as_view(next_page='/shop/'), name='logout'),
 
-    path('password-change/', views.UserPasswordChange.as_view(),
-         name="password_change"),
+    path('password-change/', views.UserPasswordChange.as_view(
+        template_name="users/password_change_form.html"),  # ← добавил template_name
+        name="password_change"),
+
     path('password-change/done/', PasswordChangeDoneView.as_view(
         template_name="users/password_change_done.html"), name="password_change_done"),
 
@@ -36,6 +38,6 @@ urlpatterns = [
              template_name="users/password_reset_complete.html"),
          name='password_reset_complete'),
 
-    path('register/', views.RegisterUser.as_view(), name='register'),
-    path('profile/', views.ProfileUser.as_view(), name='profile'),
+    path('register/', views.RegisterUser.as_view(template_name="users/register.html"), name='register'),
+    path('profile/', views.ProfileUser.as_view(template_name="users/profile.html"), name='profile'),
 ]

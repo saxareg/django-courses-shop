@@ -1,4 +1,7 @@
 
+import sys
+from django.views.debug import technical_500_response
+from django.http import Http404
 from pathlib import Path
 import os
 from dotenv import load_dotenv
@@ -163,3 +166,13 @@ USERS_IMAGES_URL = '/users_images/'
 
 # Дефолтная аватарка
 DEFAULT_USER_IMAGE = 'default_image.png'
+
+
+# Принудительно показывать debug страницы
+
+
+def show_debug_toolbar(request):
+    return True
+
+
+DEBUG_PROPAGATE_EXCEPTIONS = True
