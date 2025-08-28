@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'django_extensions',
     'django_celery_results',
+    ' rest_framework',
 ]
 
 MIDDLEWARE = [

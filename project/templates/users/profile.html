@@ -7,9 +7,9 @@
     {% csrf_token %}
     {% if user.photo %}
     <p><img src="{{ user.photo.url }}">
-    {% else %}
+        {% else %}
     <p><img src="{{ default_image }}">
-    {% endif %}
+        {% endif %}
 
     <div class="form-error">{{ form.non_field_errors }}</div>
     {% for f in form %}
@@ -24,5 +24,22 @@
 <hr>
 <p><a href="{% url 'users:password_change' %}">Сменить пароль</a></p>
 {% endif %}
+
+<hr>
+<h2>Мои курсы</h2>
+<ul>
+    {% for purchase in purchases %}
+    <li>
+        {{ purchase.course.title }}
+        {% if purchase.course.course_file %}
+        — <a href="{% url 'shop:download_course' purchase.course.id %}">Скачать</a>
+        {% else %}
+        — Файл недоступен
+        {% endif %}
+    </li>
+    {% empty %}
+    <li>Вы пока не приобрели ни одного курса.</li>
+    {% endfor %}
+</ul>
 
 {% endblock %}

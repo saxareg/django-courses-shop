@@ -8,5 +8,7 @@ urlpatterns = [
     path('filter/', views.filter_courses, name='filter'),
     path('buy/<int:course_id>/', views.buy_course, name='buy_course'),
     path('my-courses/', views.my_courses, name='my_courses'),
+    path('download/<int:course_id>/',
+         views.download_course, name='download_course'),
     path('<str:my_slug>', views.single_course, name='single_course'),
 ]

@@ -10,6 +10,15 @@ from django.views.generic import CreateView, UpdateView
 from base import settings
 from .forms import LoginUserForm, RegisterUserForm, ProfileUserForm, UserPasswordChangeForm
 
+from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import UpdateView
+from django.urls import reverse_lazy
+from base import settings
+from shop.models import Purchase
+
+from .forms import ProfileUserForm
+
 
 class LoginUser(LoginView):
     form_class = LoginUserForm
@@ -41,6 +50,12 @@ class ProfileUser(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['purchases'] = Purchase.objects.filter(
+            user=self.request.user).select_related('course')
+        return context
 
 
 class UserPasswordChange(PasswordChangeView):

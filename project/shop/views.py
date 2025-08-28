@@ -2,9 +2,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import FileResponse, Http404
+from django.conf import settings
+import os
 
 from .models import Course, Category, Purchase
-from .tasks import send_purchase_email   # ✅ импорт Celery-задачи
+from .tasks import send_purchase_email   # ✅ Celery-задача
 
 
 def index(request):
@@ -94,7 +97,26 @@ def buy_course(request, course_id):
 
 @login_required
 def my_courses(request):
+    courses_page = Course.objects.all()
     purchases = Purchase.objects.filter(
         user=request.user).select_related('course')
-    courses_page = Course.objects.all()
-    return render(request, 'shop/courses.html', {'purchases': purchases, 'courses': courses_page, })
+    return render(request, 'shop/courses.html', {'purchases': purchases, 'courses': courses_page})
+
+
+@login_required
+def download_course(request, course_id):
+    """Позволяет скачать файл только если курс куплен"""
+    purchase = Purchase.objects.filter(
+        user=request.user, course_id=course_id).first()
+    if not purchase:
+        raise Http404("У вас нет доступа к этому файлу.")
+
+    course = purchase.course
+    if not course.course_file:
+        raise Http404("Файл для этого курса не найден.")
+
+    file_path = course.course_file.path
+    if not os.path.exists(file_path):
+        raise Http404("Файл не найден на сервере.")
+
+    return FileResponse(open(file_path, "rb"), as_attachment=True, filename=os.path.basename(file_path))
