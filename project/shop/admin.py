@@ -1,22 +1,25 @@
 from django.contrib import admin
-from .import models
-
-# this bouth class I used for administration dask
+from .models import Category, Course, Purchase
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['title', 'slug', 'created_at']
+    list_display = ('title', 'slug', 'created_at')
     prepopulated_fields = {'slug': ('title',)}
 
 
-class ProductAdmin(admin.ModelAdmin):
-    list_display = ['title', 'slug', 'price', 'category', 'created_at']
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ('title', 'slug', 'price', 'category', 'created_at')
     prepopulated_fields = {'slug': ('title',)}
-    ordering = ['-created_at', 'title']
+    ordering = ('-created_at', 'title')
     list_per_page = 10
-    search_fields = ['title']
+    search_fields = ('title',)
 
 
-# registration
-admin.site.register(models.Category, CategoryAdmin)
-admin.site.register(models.Course, ProductAdmin)
+class PurchaseAdmin(admin.ModelAdmin):
+    list_display = ('user', 'course', 'created_at')
+    list_filter = ('created_at',)
+
+
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Course, CourseAdmin)
+admin.site.register(Purchase, PurchaseAdmin)

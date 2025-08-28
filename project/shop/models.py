@@ -1,15 +1,14 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
 
-# category class
-
 
 class Category(models.Model):
     title = models.CharField(max_length=255)
-    created_at = models.DateTimeField(default=timezone.now)
-    slug = models.CharField(max_length=255, unique=True,
+    slug = models.SlugField(max_length=255, unique=True,
                             blank=True, db_index=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -19,24 +18,26 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
-# main class
-
-# основная сущность
-
 
 class Course(models.Model):
     title = models.CharField(max_length=300)
-    price = models.FloatField()
-    students_qty = models.IntegerField()
-    reviews_qty = models.IntegerField()
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(default=timezone.now)
-    slug = models.CharField(max_length=255, unique=True,
+    slug = models.SlugField(max_length=255, unique=True,
                             blank=True, db_index=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    students_qty = models.PositiveIntegerField(default=0)
+    reviews_qty = models.PositiveIntegerField(default=0)
     image = models.ImageField(upload_to='images/')
+    course_file = models.FileField(
+        upload_to='course_files/',
+        blank=True,
+        null=True,
+        verbose_name='Файл курса'
+    )
+    created_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        ordering = ['students_qty']
+        ordering = ['-created_at']
         indexes = [
             models.Index(fields=['students_qty'])
         ]
@@ -48,3 +49,15 @@ class Course(models.Model):
 
     def __str__(self):
         return self.title
+
+
+User = get_user_model()
+
+
+class Purchase(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} bought {self.course.title}"
